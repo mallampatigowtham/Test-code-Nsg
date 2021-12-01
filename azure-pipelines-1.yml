@@ -10,9 +10,9 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: TerraformInstaller@0
-  inputs:
-    terraformVersion: 'latest'
+- task: charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-installer.TerraformInstaller@0
+  displayName: 'Use Terraform latest in ${{ parameters.environment_name }}'
+
 - task: TerraformCLI@0
   inputs:
     command: 'init'
