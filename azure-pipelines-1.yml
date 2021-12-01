@@ -25,4 +25,5 @@ steps:
     command: 'apply'
     environmentServiceName: 'AzuretoDevops'
     runAzLogin: true
+    commandOptions: '-var-file=dev.auto.tfvars'
     allowTelemetryCollection: true
