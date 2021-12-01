@@ -22,6 +22,11 @@ steps:
     allowTelemetryCollection: true
 - task: TerraformCLI@0
   inputs:
+    command: 'plan'
+    environmentServiceName: 'AzuretoDevops'
+    allowTelemetryCollection: true
+- task: TerraformCLI@0
+  inputs:
     command: 'apply'
     environmentServiceName: 'AzuretoDevops'
     runAzLogin: true
