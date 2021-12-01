@@ -1,0 +1,59 @@
+parameters:
+  - name: environment_name
+  - name: source_location
+  - name: Service_connection_Name
+  - name: variables_file_path
+  - name: environment_Display_Name
+  #- name: rgname
+  #- name: location
+  #- name: nsgname
+  #- name: vnet
+
+stages:
+- stage: ${{ parameters.environment_name }}
+  displayName: Deploying to ${{ parameters.environment_name }}
+  jobs:
+  - deployment: 
+    displayName: Deploying to ${{ parameters.environment_name }}
+    pool:
+      vmImage: 'windows-latest'
+    environment: ${{ parameters.environment_name }}
+    strategy:
+     runOnce:
+      deploy:
+       steps:
+       - checkout: self
+       - task: charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-installer.TerraformInstaller@0
+         displayName: 'Use Terraform latest in ${{ parameters.environment_name }}'
+
+       #- task: AzurePowerShell@5
+        # displayName: 'Creating JSON file'
+         #inputs:
+          # azureSubscription: 'AureMain'
+           #ScriptType: 'FilePath'
+           #ScriptPath: '$(System.DefaultWorkingDirectory)/${{ parameters.source_location }}/Azure_Subnet_list.ps1'
+           #ScriptArguments: '-DefaultWorkingDirectory $(System.DefaultWorkingDirectory) -SourceLocation ${{ parameters.source_location }}'
+           #azurePowerShellVersion: 'LatestVersion'
+
+       - task: TerraformCLI@0
+         inputs:
+           command: 'init'
+           workingDirectory: '$(System.DefaultWorkingDirectory)/${{ parameters.source_location }}'
+           allowTelemetryCollection: true
+
+       - task: TerraformCLI@0
+         displayName: 'validating my script in ${{ parameters.environment_name }}'
+         inputs:
+           command: 'validate'
+           workingDirectory: '$(System.DefaultWorkingDirectory)/${{ parameters.source_location }}'
+           allowTelemetryCollection: true
+           
+       - task: TerraformCLI@0
+         displayName: 'applying terraform script ${{ parameters.environment_name }}'
+         inputs:
+           command: 'apply'
+           workingDirectory: '$(System.DefaultWorkingDirectory)/${{ parameters.source_location }}'
+           environmentServiceName: ${{ parameters.Service_connection_Name }}
+           #commandOptions: '-var="rgname=${{ parameters.rgname }}" -var="nsg=${{ parameters.nsgname }}" -var="location=${{ parameters.location }}" -var="vnets=${{ parameters.vnet }}"'
+           commandOptions: '-var-file=dev.auto.tfvars'
+           allowTelemetryCollection: true
