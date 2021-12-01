@@ -1,0 +1,40 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- none
+parameters:
+  - name: environment_name
+    values:
+      - 'prod'
+  - name: source_location
+    values:
+      - '/VMNicNSg'
+  - name: variables_file_path
+    values:
+      - '/VMNicNSg/dev.auto.tfvars'
+  - name: environment_Display_Name
+    values:
+      - 'prod'
+  - name: Service_connection_Name
+    values:
+      - 'AzuretoDevops'
+
+pool:
+  vmImage: windows-latest
+  
+stages:
+- template: Templates/VMnic.yaml
+  parameters:
+   environment_name: ${{ parameters.environment_name }}
+   source_location: ${{ parameters.source_location }}
+   variables_file_path: ${{ parameters.variables_file_path }}
+   environment_Display_Name: ${{ parameters.environment_Display_Name }}
+   Service_connection_Name: ${{ parameters.Service_connection_Name }}
