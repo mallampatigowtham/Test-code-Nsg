@@ -1,0 +1,31 @@
+resources:
+  repositories:
+  - repository: self
+    type: git
+    ref: main
+jobs:
+- job: Job_1
+  displayName: Agent job 1
+  pool:
+    vmImage: windows-2019
+  steps:
+  - checkout: self
+    clean: true
+  - task: TerraformInstaller@0
+    displayName: Install Terraform latest
+  - task: TerraformCLI@0
+    displayName: init
+    inputs:
+      command: init
+      workingDirectory: VMNicNSg
+  - task: TerraformCLI@0
+    displayName: terraform validate
+    inputs:
+      workingDirectory: VMNicNSg
+  - task: TerraformCLI@0
+    displayName: terraform apply
+    inputs:
+      command: apply
+      workingDirectory: VMNicNSg
+      environmentServiceName: 2ccfad1b-759d-4b8a-a7a6-a9abdbb4e70e
+...
